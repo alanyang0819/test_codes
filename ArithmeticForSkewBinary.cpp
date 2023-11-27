@@ -24,7 +24,7 @@ int main()
        cin >> BinaryOne >> BinaryTwo;
        unsigned long long totalDecimal = convertToDecimal(BinaryOne) + convertToDecimal(BinaryTwo);
        int finalBinary[63] = {0};
-       for(int n = 0, m = 63; n < 63; n++, m--)
+       for(int n = 0, m = 63; n < 63, m > 0; n++, m--)
        {
         if(totalDecimal >= (1ULL << m) - 1)
         {
