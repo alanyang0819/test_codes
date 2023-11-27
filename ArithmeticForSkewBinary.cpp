@@ -1,45 +1,16 @@
 #include<iostream>
-#include<cmath>
 #include<string>
-#include<vector>
 using namespace std;
-
-vector<unsigned long long> sb;
 
 unsigned long long convertToDecimal(string skewedBinary)
 {
     unsigned long long decimal = 0;
-    for (int i = 0; i < skewedBinary.length(); i++)
+    for(int i = 0; i < skewedBinary.length(); i++)
     {
         unsigned long long digit = skewedBinary[skewedBinary.length() - i - 1] - '0';
-        decimal = decimal + digit * (pow(2, i + 1) - 1);
+        decimal = decimal + digit * ((1ULL << i + 1) - 1);
     }
     return decimal;
-}
-
-unsigned long long convertToSkewedBinary(unsigned long long decimal)
-{
-    sb.clear();
-    sb.push_back(0);
-
-    unsigned long long  index = 1;
-    unsigned long long position = 2;
-
-    while (position <= decimal)
-    {
-        position = position * 2;
-        index = index + 1;
-    }
-
-    for (int j = 1; j <= index; j++)
-    {
-        unsigned long long power = pow(2, j);
-        for (int m = 0; m <= power - 1; m++)
-        {
-            sb.push_back(pow(10, j - 1) + sb[m]);
-        }
-    }
-    return sb[decimal];
 }
 
 int main()
@@ -48,25 +19,50 @@ int main()
     cin >> testcases;
     for (int i = 0; i < testcases; i++)
     {
-        string BinaryOne;
-        string BinaryTwo;
-        cin >> BinaryOne >> BinaryTwo;
-        unsigned long long totalDecimal = convertToDecimal(BinaryOne) + convertToDecimal(BinaryTwo);
-        unsigned long long Binary = convertToSkewedBinary(totalDecimal);
-        string finalBinary = "";
-        while (Binary >= 1)
+       string BinaryOne;
+       string BinaryTwo;
+       cin >> BinaryOne >> BinaryTwo;
+       unsigned long long totalDecimal = convertToDecimal(BinaryOne) + convertToDecimal(BinaryTwo);
+       int finalBinary[63] = {0};
+       for(int n = 0, m = 63; n < 63; n++, m--)
+       {
+        if(totalDecimal >= (1ULL << m) - 1)
         {
-            finalBinary = to_string(Binary % 10) + finalBinary;
-            Binary = Binary / 10;
-        }
-        cout << "#" << " ";
-        for (int j = 0; j < finalBinary.length(); j++)
-        {
-            if (j % 10 == 0 && j / 10 > 0)
+            finalBinary[n]++;
+            totalDecimal = totalDecimal - ((1ULL << m) - 1);
+            if(totalDecimal == (1ULL << m) - 1)
             {
-                cout << " ";
+                finalBinary[n]++;
+                totalDecimal = totalDecimal - ((1ULL << m) - 1);
             }
-            cout << finalBinary[j];
+        }  
+            if(totalDecimal == 0)
+            {
+               break;
+            }
+        }
+        bool nonzero = false;
+        int spaces = 0;
+        cout << "#" << " ";
+        for(int x = 0; x < 63; x++)
+        {
+            if(finalBinary[x] == 0 && !nonzero)
+            {
+                continue;
+            }
+            if(finalBinary[x] != 0)
+            {
+                nonzero = true;
+            }
+            if(nonzero)
+            {
+                spaces++;
+                cout << finalBinary[x];
+                if(spaces % 10 == 0)
+                {
+                    cout << " ";
+                }
+            }
         }
         cout << endl;
     }
