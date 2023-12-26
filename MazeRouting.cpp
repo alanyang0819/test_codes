@@ -1,184 +1,196 @@
 #include<iostream>
 using namespace std;
-
-const int dim1= 100, dim2 = 100; 
-void readMaze(char maze[dim1][dim2], int row, int column, int &startX, int &startY)
+void readMaze(char maze[][10],int row,int column,int &startx,int &starty)
 {
-  for(int i = 0; i < row; i++){
-    for(int k = 0; k < column; k++){
-      if(maze[i][k] == 'S'){
-        startX = i;
-        startY = k;
-      }
-    }
-  }
-}
-
-enum direction_of_move {move_left, move_up, move_right, move_down};
-// 移動判斷並累積步數
-void move(direction_of_move &direction, char maze[][dim2], int row, int column, int &currX, int &currY, int &numOfMove)
-{
-    switch (direction)
+    for(int i = 0; i < row; i++)
     {
-    case move_left:
-        if((currX+1 < row) && maze[currX+1][currY] != '1')
+        for(int k = 0; k < column; k++)
         {
-            direction = move_down;
-            currX++;
+            if(maze[i][k] == 'S')
+            {
+                startx = i;
+                starty = k;
+            }
         }
-        else if((currY-1 >= 0) && maze[currX][currY-1] != '1')
-        {
-            direction = move_left;
-            currY--;
-        }
-        else if((currX-1 >= 0) && maze[currX-1][currY] != '1')
-        {
-            direction = move_up;
-            currX--;
-        }
-        else if((currY+1 < column) && maze[currX][currY+1] != '1')
-        {
-            direction = move_right;
-            currY++;
-        }
-        numOfMove++;
-        break;
-    case move_up:
-        if((currY-1 >= 0) && maze[currX][currY-1] != '1')
-        {
-            direction = move_left;
-            currY--;
-        }
-        else if((currX-1 >= 0) && maze[currX-1][currY] != '1')
-        {
-            direction = move_up;
-            currX--;
-        }
-        else if((currY+1 < column) && maze[currX][currY+1] != '1')
-        {
-            direction = move_right;
-            currY++;
-        }
-        else if((currX+1 < row) && maze[currX+1][currY] != '1')
-        {
-            direction = move_down;
-            currX++;
-        }
-        numOfMove++;
-        break;
-    case move_right:
-        if((currX-1 >= 0) && maze[currX-1][currY] != '1')
-        {
-            direction = move_up;
-            currX--;
-        }
-        else if((currY+1 < column) && maze[currX][currY+1] != '1')
-        {
-            direction = move_right;
-            currY++;
-        }
-        else if((currX+1 < row) && maze[currX+1][currY] != '1')
-        {
-            direction = move_down;
-            currX++;
-        }
-        else if((currY-1 >= 0) && maze[currX][currY-1] != '1')
-        {
-            direction = move_left;
-            currY--;
-        }
-        numOfMove++;
-        break;
-    case move_down:
-        if((currY+1 < column) && maze[currX][currY+1] != '1')
-        {
-            direction = move_right;
-            currY++;
-        }
-        else if((currX+1 < row) && maze[currX+1][currY] != '1')
-        {
-            direction = move_down;
-            currX++;
-        }
-        else if((currY-1 >= 0) && maze[currX][currY-1] != '1')
-        {
-            direction = move_left;
-            currY--;
-        }
-        else if((currX-1 >= 0) && maze[currX-1][currY] != '1')
-        {
-            direction = move_up;
-            currX--;
-        }
-        numOfMove++;
-        break;
-    default:
-        break;
     }
 }
-
-int findPath(char maze[dim1][dim2], int row, int column, int &startX, int &startY, int &targetX, int &targetY)
+int findPath(char maze[][10],int row,int column,int startx,int starty,int &targetx,int &targety)
 {
-  
-  direction_of_move direction;
-  int numOfMove = 0, currX = startX, currY = startY;
-  if(currY - 1 >= 0 && maze[currX][currY - 1] == '0'){
-      currY--;
-      direction = move_left;
-      
+    for(int k = 0; k < row; k++)
+    {
+        for(int j = 0; j < column; j++)
+        {
+            if(maze[k][j] == 'T')
+            {
+                targetx = k;
+                targety = j;
+            }
+        }
     }
-      else if(currX + 1 < row && maze[currX + 1][currY] == '0'){
-        currX++;
-        direction = move_down;
-       
-    }
-      else if(currY + 1 < column && maze[currX][currY + 1] == '0'){
+    enum direction{right, front, left, back};
+    direction dir = front;
+    int currX = startx;
+    int currY = starty;
+    int path = 0;
+    if(maze[currX][currY + 1] == '0' )
+    {
         currY++;
-        direction = move_right;
-        
+        dir = right;
+        path++;
     }
-      else if(currX - 1 >= 0 && maze[currX - 1 ][currY] == '0'){
-        currX--;
-        direction = move_up;
-       
-    }
-    do
+    else if(maze[currX - 1][currY] == '0' )
     {
-        move(direction, maze, row, column, currX, currY, numOfMove);
+        currX--;
+        dir = front;
+        path++;
     }
-    while(maze[currX][currY] == '0');
-    targetX = currX;
-    targetY = currY;
+    else if(maze[currX][currY - 1] == '0' )
+    {
+        currY--;
+        dir = left;
+        path++;
+    }
+    else if(maze[currX + 1][currY] == '0')
+    {
+        currX++;
+        dir = back;
+        path++;
+    }
 
-    return numOfMove;
-
-  
+    while(currX >=0 && currX < row && currY >=0 && currY < column && maze[currX][currY] != 'T' && maze[currX][currY] != 'S')
+    {
+        switch(dir)
+        {
+            case front:
+               if(maze[currX][currY + 1] == '0' || maze[currX][currY + 1] == 'T' || maze[currX][currY + 1] == 'S')
+               {
+                currY++;
+                dir = right;
+               }
+                else if(maze[currX - 1][currY] == '0' || maze[currX - 1][currY] == 'T' || maze[currX - 1][currY] == 'S')
+                {
+                    currX--;
+                    dir = front;
+                }
+                else if(maze[currX][currY - 1] == '0' || maze[currX][currY - 1] == 'T' || maze[currX][currY - 1] == 'S')
+                {
+                    currY--;
+                    dir = left;
+                }
+                else if(maze[currX + 1][currY] == '0' || maze[currX + 1][currY] == 'T' || maze[currX + 1][currY] == 'S')
+                {
+                    currX++;
+                    dir = back;
+                }
+                path++;
+                break;
+             case right:
+                 if(maze[currX + 1][currY] == '0' || maze[currX + 1][currY] == 'T' || maze[currX + 1][currY] == 'S')
+                 {
+                    currX++;
+                    dir = back;
+                 }
+                 else if(maze[currX][currY + 1] == '0' || maze[currX][currY + 1] == 'T' || maze[currX][currY + 1] == 'S')
+                 {
+                    currY++;
+                    dir = right;
+                 }
+                 else if(maze[currX - 1][currY] == '0' || maze[currX - 1][currY] == 'T' ||  maze[currX - 1][currY] == 'S')
+                 {
+                    currX--;
+                    dir = front;
+                 }
+                 else if(maze[currX][currY - 1] == '0' || maze[currX][currY - 1] == 'T' || maze[currX][currY - 1] == 'S')
+                 {
+                    currY--;
+                    dir = left;
+                 }
+                 path++;
+                 break;
+              case left:
+                 if(maze[currX - 1][currY] == '0' || maze[currX - 1][currY] == 'T' || maze[currX - 1][currY] == 'S')
+                 {
+                    currX--;
+                    dir = front;
+                 }
+                 else if(maze[currX][currY - 1] == '0' || maze[currX][currY - 1] == 'T' || maze[currX][currY - 1] == 'S')
+                 {
+                    currY--;
+                    dir = left;
+                 }
+                 else if(maze[currX + 1][currY] == '0' || maze[currX + 1][currY] == 'T' || maze[currX + 1][currY] == 'S')
+                 {
+                    currX++;
+                    dir = back;
+                 }
+                 else if(maze[currX][currY + 1] == '0' || maze[currX][currY + 1] == 'T' || maze[currX][currY + 1] == 'S')
+                 {
+                    currY++;
+                    dir = right;
+                 }
+                 path++;
+                 break;
+             case back:
+                if(maze[currX][currY - 1] == '0' || maze[currX][currY - 1] == 'T' || maze[currX][currY - 1] == 'S')
+                {
+                    currY--;
+                    dir = left;
+                }
+                else if(maze[currX + 1][currY] == '0' || maze[currX + 1][currY] == 'T' || maze[currX + 1][currY] == 'S')
+                {
+                    currX++;
+                    dir = back;
+                }
+                else if(maze[currX][currY + 1] == '0' || maze[currX][currY + 1] == 'T' || maze[currX][currY + 1] == 'S')
+                {
+                    currY++;
+                    dir = right;
+                }
+                else if(maze[currX - 1][currY] == '0' || maze[currX - 1][currY] == 'T' || maze[currX - 1][currY] == 'S')
+                {
+                    currX--;
+                    dir = front;
+                }
+                path++;
+                break;
+            default:
+              break;
+        }
+    }
+    if(maze[currX][currY] == 'S')
+    {
+        targetx = startx;
+        targety = starty;
+    }
+    return path;
 }
 
 int main()
 {
-  int numTest;
-  char maze[dim1][dim2];
-  cin >> numTest;
-  for(int j = 0; j < numTest; j++){
-    int column;
-    int row;
-    int numOfMove;
-    int startX;
-    int startY;
-    int targetX;
-    int targetY;
-    cin >> row >> column;
-    for(int x = 0; x < row; x++){
-      for(int y = 0; y < column; y++){
-        cin >> maze[x][y];
-      }
+ int numTest;
+ char maze[10][10];
+ cin >> numTest;
+ for(int i = 0; i < numTest; i++)
+ {
+  int column;
+  int row;
+  int numOfMove;
+  int startX;
+  int startY;
+  int targetX;
+  int targetY;
+  cin >> row >> column;
+  for(int n = 0; n < row; n++)
+  {
+    for(int m = 0; m < column; m++)
+    {
+        cin >>maze[n][m];
     }
-    readMaze(maze, row, column, startX, startY);
-    numOfMove = findPath(maze, row, column, startX, startY, targetX, targetY);
-
-    cout << "# Source coordinates: (" << startX + 1 << "," << startY + 1 << "). Target coordinates: (" 
-    << targetX + 1 << "," << targetY + 1 << "), Distance traveled: " << numOfMove << endl;
   }
-  return 0;
-}
+  readMaze(maze,row,column,startX,startY);
+  numOfMove = findPath(maze,row,column,startX,startY,targetX,targetY);
+  cout << "Source coordinates:(" << startX + 1 << ","<< startY + 1 <<"). Target coordinates:(" << targetX + 1 << "," << targetY + 1
+  << "),Distance traveled:" << numOfMove << endl;
+  }
+
+ }
