@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:provider/provider.dart';
@@ -159,46 +160,61 @@ _aboutUsPage() {
                       final whisperText =
                           recordProvider.apiResponse!['whisper_text'];
 
-                      // Show notification when result is displayed
+                      // Show notification when the result is displayed
                       _showNotification(whisperText);
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onLongPress: () {
-                              // Copy to clipboard logic
-                              Clipboard.setData(
-                                  ClipboardData(text: whisperText));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Result copied to clipboard'),
+                      return GestureDetector(
+                        onLongPress: () {
+                          // Copy to clipboard logic
+                          Clipboard.setData(ClipboardData(text: whisperText));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Result copied to clipboard'),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context)
+                                  .size
+                                  .height, // Set a fixed height or adjust as needed
+                              child: Markdown(
+                                data: whisperText,
+                                styleSheet: MarkdownStyleSheet(
+                                  textAlign: WrapAlignment.start,
+                                  h1: const TextStyle(fontSize: 32),
+                                  h2: const TextStyle(fontSize: 24),
+                                  h3: const TextStyle(fontSize: 20),
+                                  h4: const TextStyle(fontSize: 18),
+                                  h5: const TextStyle(fontSize: 16),
+                                  h6: const TextStyle(fontSize: 14),
+                                  p: const TextStyle(fontSize: 16),
+                                  a: const TextStyle(
+                                    color: Colors.black,
+                                    decoration: TextDecoration.underline,
+                                  ),
                                 ),
-                              );
-                            },
-                            child: Text(
-                              '$whisperText',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Copy to clipboard logic
-                              Clipboard.setData(
-                                  ClipboardData(text: whisperText));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Result copied to clipboard'),
-                                ),
-                              );
-                            },
-                            child: const Text('Copy text'),
-                          ),
-                        ],
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Copy to clipboard logic
+                                Clipboard.setData(
+                                  ClipboardData(text: whisperText),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Result copied to clipboard'),
+                                  ),
+                                );
+                              },
+                              child: const Text('Copy text'),
+                            ),
+                          ],
+                        ),
                       );
                     } else {
                       return Container(); // Placeholder if no API response yet
