@@ -157,16 +157,16 @@ _aboutUsPage() {
                   builder: (context, recordProvider, _) {
                     // Display API response information
                     if (recordProvider.apiResponse != null) {
-                      final gptResponse =
-                          recordProvider.apiResponse!['gpt_response'];
+                      final whisperText =
+                          recordProvider.apiResponse!['whisper_text'];
 
                       // Show notification when the result is displayed
-                      _showNotification(gptResponse);
+                      _showNotification(whisperText);
 
                       return GestureDetector(
                         onLongPress: () {
                           // Copy to clipboard logic
-                          Clipboard.setData(ClipboardData(text: gptResponse));
+                          Clipboard.setData(ClipboardData(text: whisperText));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Result copied to clipboard'),
@@ -181,7 +181,7 @@ _aboutUsPage() {
                                   .size
                                   .height, // Set a fixed height or adjust as needed
                               child: Markdown(
-                                data: gptResponse,
+                                data: whisperText,
                                 styleSheet: MarkdownStyleSheet(
                                   textAlign: WrapAlignment.start,
                                   h1: const TextStyle(fontSize: 32),
@@ -203,7 +203,7 @@ _aboutUsPage() {
                               onPressed: () {
                                 // Copy to clipboard logic
                                 Clipboard.setData(
-                                  ClipboardData(text: gptResponse),
+                                  ClipboardData(text: whisperText),
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
