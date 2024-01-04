@@ -81,7 +81,7 @@ class _RecordAndPlayScreenState extends State<RecordAndPlayScreen> {
         image: DecorationImage(
           fit: BoxFit.cover,
           image: NetworkImage(
-              "https://lh3.googleusercontent.com/proxy/VeHxnInz_otY964Q25VQcQzz3MYzptpIgFmRfKdWqINbmDgfm6QUnoousAhPs_ObfrTe1kSkf_crndqGoV69P2W_6BmDxngrpxnuYaSBwv6NvgAMuCflMndXRgwl_kFNa7WsmQ5m2ny3l5hbawagVxQei2dFWWc=w3840-h2160-p-k-no-nd-mv"),
+              "https://w0.peakpx.com/wallpaper/403/183/HD-wallpaper-sound-beat-dark-gray-sound-wave.jpg"),
         ),
       ),
       child: Column(
@@ -120,7 +120,7 @@ class _RecordAndPlayScreenState extends State<RecordAndPlayScreen> {
             ? const RippleAnimation(
                 repeat: true,
                 color: Colors.red,
-                minRadius: 40,
+                minRadius: 80,
                 ripplesCount: 6,
                 child: Icon(
                   Icons.stop,
