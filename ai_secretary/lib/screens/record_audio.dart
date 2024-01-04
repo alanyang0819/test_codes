@@ -120,7 +120,7 @@ class _RecordAndPlayScreenState extends State<RecordAndPlayScreen> {
             ? const RippleAnimation(
                 repeat: true,
                 color: Colors.red,
-                minRadius: 40,
+                minRadius: 80,
                 ripplesCount: 6,
                 child: Icon(
                   Icons.stop,
