@@ -152,20 +152,16 @@ _aboutUsPage() {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                // Use the context parameter in Provider.of
                 Consumer<RecordAudioProvider>(
                   builder: (context, recordProvider, _) {
-                    // Display API response information
                     if (recordProvider.apiResponse != null) {
                       final whisperText =
                           recordProvider.apiResponse!['whisper_text'];
 
-                      // Show notification when the result is displayed
                       _showNotification(whisperText);
 
                       return GestureDetector(
                         onLongPress: () {
-                          // Copy to clipboard logic
                           Clipboard.setData(ClipboardData(text: whisperText));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -177,9 +173,7 @@ _aboutUsPage() {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              height: MediaQuery.of(context)
-                                  .size
-                                  .height, // Set a fixed height or adjust as needed
+                              height: MediaQuery.of(context).size.height,
                               child: Markdown(
                                 data: whisperText,
                                 styleSheet: MarkdownStyleSheet(
@@ -201,7 +195,6 @@ _aboutUsPage() {
                             const SizedBox(height: 16),
                             ElevatedButton(
                               onPressed: () {
-                                // Copy to clipboard logic
                                 Clipboard.setData(
                                   ClipboardData(text: whisperText),
                                 );
@@ -217,18 +210,35 @@ _aboutUsPage() {
                         ),
                       );
                     } else {
-                      return Container(); // Placeholder if no API response yet
+                      return Container();
                     }
                   },
                 ),
               ],
             ),
           ),
+
+          const SizedBox(height: 16),
+
+          // AnimatedTextKit
+          AnimatedTextKit(
+            animatedTexts: [
+              TypewriterAnimatedText(
+                recordProvider.apiResponse!['whisper_text'],
+                textStyle: const TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black,
+                ),
+                speed: const Duration(milliseconds: 100),
+              ),
+            ],
+          ),
         ],
       ),
     ),
   );
 }
+
 
 void _showNotification(String message) async {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
