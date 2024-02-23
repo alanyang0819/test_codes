@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'package:provider/provider.dart';
 
@@ -120,7 +123,7 @@ class _RecordAndPlayScreenState extends State<RecordAndPlayScreen> {
             ? const RippleAnimation(
                 repeat: true,
                 color: Colors.red,
-                minRadius: 40,
+                minRadius: 80,
                 ripplesCount: 6,
                 child: Icon(
                   Icons.stop,
