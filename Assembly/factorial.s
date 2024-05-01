@@ -3,7 +3,7 @@
 #Name:Jie-Luen Yang
 #Student ID Number:s1113560
 #(a).How many hours did you spend for this homework?
-#ANS:
+#ANS:5 hours
 #(b).Who has helped you solved this coding problem?
 #ANS:NO
 #(c).Do you copy someone's code?
